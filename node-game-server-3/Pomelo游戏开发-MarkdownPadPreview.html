@@ -1,0 +1,369 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Pomelo游戏开发</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: d5e7ce436666e7d4a2eeb12e7f8261dacceb3565 */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+.markdown-body img {
+  max-width: 100%
+}
+</style>
+
+</head>
+<body>
+<h1>基于Pomelo的MMO RPG开发</h1>
+<p>在这篇文章中，我们使用Pomelo框架来搭建一个简单的MMO RPG框架，我们的目标是做到以下几点：
+在服务端搭建支持多个玩家的场景服务器。
+支持多人同时在线，实时互动。
+使用Pomelo框架进行服务端扩展。</p>
+<h2>开始之前</h2>
+<p>作为一个开源可扩展的游戏框架，pomelo为游戏开
+Pomelo为我们的游戏开发提供了什么：
+提供可扩展的游戏服务器通信框架，包括客户端与服务器之间，服务器与服务器之间的通信。
+可扩展的服务器架构，pomelo本身提供了良好的扩展性支持。
+公共的库：如任务调度，AI控制，寻路等。
+同时，Pomelo不做的：
+服务端具体业务逻辑代码：Pomelo是一个游戏框架，不是一个具体的游戏，我们不会实现具体的业务逻辑代码的实现。
+客户端开发：Pomelo 是一个服务端的框架，因此我们不关心客户端的逻辑代码。我们提供的客户端仅仅是一个长连接的客户端，服务消息的发送和接受，而对于客户端具体游戏逻辑的开发则不是我们关心的内容。</p>
+<p>因此，在这篇文章中，我们主要关注下面几点：
+基于Pomelo框架的MMO RPG游戏逻辑搭建，如何建立服务端的
+客户端与服务端的通信：</p>
+<h2>场景服务器的搭建</h2>
+<p>场景服务器是游戏世界在服务端的抽象，是玩家所处的虚拟环境。一个基本的场景服务包括：
+场景地图，玩家，道具等。。。</p>
+<h3>场景服务</h3>
+<p>严格来说，场景服务器的搭建并不属于Pomelo框架的内容，这里的场景服务器是一个，起到抛砖引玉的作用。
+作为一个MMO RPG，肯定是要有供玩家
+需要加入新的场景服务器，
+1，加入新的服务器
+2，</p>
+<p>根据游戏类型和内容的不同，场景服务器的复杂程度也会千差万别，这里，我们以treasure为例，来构建出一个简单的游戏服务器场景。
+首先，作为一个场景服务器，需要能够储存用户和宝物的信息，这里我们直接使用一个放在内存中的map来储存场景中的所有实体，同时，我们将所有场景中的实体都抽象为一个Entity对象，放在这个map中。
+之后，场景服务器还需要有对外的接口。首先，是场景初始化的接口，我们在init方法中会设置场景信息，配置参数等。我们加入了AddEntity和RemoveEntity接口，来供外部请求来添加和删除实体。之后，除了添加和删除实体外，我们还提供了刷新场景中的宝物接口，这样，当满足条件时，外部事件会调用改接口来刷新地图中的宝物。</p>
+<h3>场景驱动</h3>
+<p>作为MMORPG中的场景服务，其中的内容是实时变化的，而这些数据的改变主要是通过两个方式：时间驱动和外部事件驱动。
+在真实的世界中，时间是一个重要的驱动源，很多事物状态的改变都是通过时间来驱动的。而在游戏世界中，时间也是最重要的驱动因素之一。在游戏的场景服务器中，我们通过一个tick来驱动场景。</p>
+<p>改定时器会定时调用场景的update接口，来更新场景中的内容。在我们的例子中，就是定时刷新场景中的宝物。</p>
+<p>事件驱动就是外部的请求驱动，包括来自客户端的用户请求和来自服务端的</p>
+<h3>与客户端通信</h3>
+<p>我们使用pomelo中的connector服务器来建立客户端与与服务端之间的通信。
+在Pomelo中，我们提供了三种通信方式，request/response模式，notify模式，push模式，下面</p>
+<ul>
+<li>
+<p>request/response 模式，这是标准的请求响应模式，我们使用这一方法来处理需要服务端响应的请求。以“move”为例，当玩家移动时，需要将路径发给服务端，服务端会验证客户端的请求，并将结果发给客户端，下图是具体的代码和运行流程：</p>
+<p>最上面的是客户端代码，在这里，我们想服务端发送一个请求，将目标点作为参数发送给服务端。
+之后，如坐下所示，服务端会根据请求的route，（“area.playerHandler.move&quot;）找到对应的方法，“./game-server/area/handler/playerHander.move”，并使用客户端提交的参数来调用这一方法来处理请求。
+在服务端，会根据具体的方法来处理请求，并在next方法中传入处理结果，这一结果会发回客户端，并作为参数传给客户端的请求回调。</p>
+</li>
+<li>
+<p>notify模式： notify模式的运行流程与request/response类似，只是当服务端处理请求后不会发送任何请求给客户端。</p>
+<p><code>pomelo.notify('area.playerHandler.pick', params);</code></p>
+</li>
+<li>
+<p>push模式：也就是广播模式，是在服务端对客户端那所有用户进行广播，也是我们例子中服务端与客户端数据同步的主要方式。</p>
+<p>当有事件发生时，首先，客户端提交请求，服务端处理请求并验证合法性，当确定是合法请求后，如果是需要所有用户知道的，就直接调用一个全局的channel来进行消息的推送。</p>
+</li>
+</ul>
+<h3>Pomelo客户端</h3>
+<p>pomelo客户端的作用主要是维护客户端与服务端之间的连接，将请求推送给客户端，并将服务端推送来的消息分发给对应的代码。
+因此，pomelo客户端只是一个消息分发器，不包括实际的
+现在，除了标准的JS客户端，还支持IOS，android，Java等。</p>
+<h2>基于pomelo的并行扩展</h2>
+<p>在上一节中，我们使用pomelo搭建了</p>
+<h3>连接服务器的扩展</h3>
+<h3>场景服务器的扩展</h3>
+<h3>更多的客户端</h3>
+<h2>总结</h2>
+<p>在前两节中，我们使用Pomelo框架来构建了一个简单的MMO RPG服务，我们实现了一个独立的场景服务器和连接服务器，同客户端建立了连接并进行通信。之后，我们使用pomelo的分布式特性，对原有的架构进行扩展，构建出了一个分布式的MMORPG服务端框架。
+但是，这只是一个简单的示例，MMORPG中的很多基础功能在这里都没有实现，如数据持久化，AI控制等，而这些功能在一个MMORPG中都是不可或缺的。在下面的文章中，我们请期待下一篇导读：深入游戏服务器场景管理-基于Node的游。
+并提供了多种客户端的支持。
+但是，这个仅仅</p>
+<p>服务端场景管理：
+场景的作用，复杂性。
+设计思路：服务端场景。
+客户端</p>
+<h2>一切以服务端为准</h2>
+<h2></h2>
+<h3>持久化</h3>
+<p>关于
+简单来说就一条基本的要求：不要直接对所有数据进行初始化，就算是基于key-value数据库也不行。庞大的持久化数量和持久化带来的延时会压垮你的系统，而复杂的事务要求会让任何持久层的数据丢失都变成一场灾难。
+与web服务相比，游戏服务器中的持久化有着不同的要求：
+1，首先，在游戏服务中，需要持久化的数据量要远大于web服务。为了能够保存玩家的状态信息，玩家状态的改变最终都会写入数据库中。这些状态涵盖了各个方面，既包括一些重要的事件，如升级，拾取宝物，切换场景，也包括了一些日常状态，如移动导致的坐标改变，因为使用技能导致mp减少，由于被攻击而造成的hp下降等。与web服务相比，这些数据的产生频率和数量要大的多。因为在web服务中，玩家一般是需要主动的保存操作来触发持久化请求的，这就大大减少了持久化的压力。而在游戏服务中，需要持久化的数据是在玩家的日常行为中自动产生的，其频率和数量要远远大于web中的内容。</p>
+<p>2，高实时要求。
+对于大部分web服务来说，对实时性的要求并不高，由于持久化操作造成的短时间的等待是可以接受的，而由于玩家持久化的需求一般并不频繁，在持久化是造成的等待也不会影响到后面的请求。而在game服务中，游戏的响应时间在很大程度上影响了用户体验，因为直接持久化造成的长时间的延时是不可接受的。这种情况不但会影响用户体验，服务端也很有可能因为大量未处理的持久化请求而崩溃。</p>
+<p>3，严格的事务要求。
+在web服务中，由于玩家的操作大部分是一个简单的操作，因为对于持久化事务一般不会有严格的要求。而在game服务中，由于很多行为实际上是有严格的关系,如：移动后攻击，使用技能造成伤害，同时mp减少。。。这就要我们在处理</p>
+<p>基于以上几点，简单的持久化操作无法满足我们的要求，无论是直接使用数据库还是通过一个基于内存的key-value数据库，在延时和事务性上都无法满足要求。</p>
+<p>我们在Pomelo中使用了Data-sync模块，收集所有持久化请求，定时将这些请求写入后台服务器中。其结构如下：</p>
+<p>Data-sync模块将游戏逻辑与持久化逻辑分离，在游戏完成加载之后，几乎所有的持久化操作都转为简单的内存数据读写，而持久化操作则用后台的Data-sync服务完成。</p>
+<h3>人工智能</h3>
+<p>无论是MMO</p>
+<h3>寻路</h3>
+<h3>场景细分</h3>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
