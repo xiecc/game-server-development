@@ -100,45 +100,168 @@ rpc调用的解决方案已经有n多年的历史了，但rpc在分布式开发�
 * 通过进程互备， 将状态通过日志等方式同步到另一进程， 但这可能存在着瞬间数据丢失的问题。但确实可以做到进程的快速恢复。
 
 
-### Node.js的引入
+#### Node.js的引入
 
-node.js的引入优势明显。 
+为什么会在这里谈node.js的引入？ 因为在讲了这么多分布式开发的难点之后，引入node.js实在是太自然了。它解决了分布式开发的很多问题。
+
+* 天生的分布式, node.js之所以叫node就是因为它天生就是做多进程开发的， 多个节点(node)互相通讯交织在一起组成的分布式系统是node天生就应该这么干的。例如前面提到的分布式事务、异步化操作在node.js里只是个正常的流程。
+* 网络io与可伸缩性的优势。游戏是非常io密集型的应用， 采用node.js是最合适的， 可达到最好的可伸缩性。
+* 轻量级, 轻量级的进程带来的开发效率的优势在开发的时候异常明显。
+* 语言优势。使用javascript开发可以实现快速迭代，客户端html 5使用javascript，甚至在unity3d，cocos2d-x这样的游戏平台上也可以使用javascript, 可实现最大限度的代码共用。
+
 
 
 ## 四、pomelo架构分析
 
-令人吃惊的是，在pomelo上进行分布式开发几乎与单机一样方便， 让我们看看pomelo是怎么做到的。
+
+pomelo框架在最初设计的时候只为了实现三个目标。
+* 服务器（进程）的抽象与扩展
+
+在web应用中， 每个服务器是无状态、对等的， 开发者无需通过框架或容器来管理服务器。
+但游戏应用不同， 游戏可能需要包含多种不同类型的服务器，每类服务器在数量上也可能有不同的需求。这就需要框架对服务器进行抽象和解耦，支持服务器类型和数量上的扩展。
+
+* 客户端的请求、响应、广播
+
+客户端的请求、响应与web应用是类似的， 但框架是基于长连接的， 实现模式与http请求有一定差别。
+广播是游戏服务器最频繁的操作， 需要方便的API， 并且在性能上达到极致。
+
+* 服务器间的通讯、调用
+
+尽管框架尽量避免跨进程调用，但进程间的通讯是不可避免的， 因此需要一个方便好用的RPC框架来支撑。
+
+＊ 松耦合、可插拔的应用架构。
+
+应用的扩展性很重要， pomelo framework支持以component的形式插入任何第三方组件, 也支持加入自定义的路由规则， 自定义的filter等。
+
+下面分别对这三个目标进行详细的分析：
+
+### 服务器（进程）的抽象与扩展介绍
+
+#### 服务器的抽象与分类
+该架构把游戏服务器做了抽象， 抽象成为两类：前端服务器和后端服务器， 如图：
+
+<center>
+![服务器抽象](http://pomelo.netease.com/resource/documentImage/serverAbstraction.png)
+</center>
+ 
+前端服务器(frontend)的职责：
+ * 负责承载客户端请求的连接
+ * 维护session信息
+ * 把请求转发到后端
+ * 把后端需要广播的消息发到前端
+
+后端服务器(backend)的职责：
+ * 处理业务逻辑， 包括RPC和前端请求的逻辑
+ * 把消息推送回前端
+
+#### 服务器的鸭子类型
+动态语言的面向对象有个基本概念叫鸭子类型。
+服务器的抽象也同样可以比喻为鸭子， 服务器的对外接口只有两类， 一类是接收客户端的请求， 叫做handler， 一类是接收RPC请求， 叫做remote， handler和remote的行为决定了服务器长什么样子。
+因此我们只要定义好handler和remote两类的行为， 就可以确定这个服务器的类型。
+
+#### 服务器抽象的实现
+利用目录结构与服务器对应的形式， 可以快速实现服务器的抽象。
+
+以下是示例图：
+![目录结构](http://pomelo.netease.com/resource/documentImage/directory.png)
+ 
+图中的connector, area, chat三个目录代表三类服务器类型， 每个目录下的handler与remote决定了这个服务器的行为（对外接口）。 开发者只要往handler与remote目录填代码， 就可以实现某一类的服务器。这让服务器实现起来非常方便。
+让服务器动起来， 只要填一份配置文件servers.json就可以让服务器快速动起来。
+配置文件内容如下所示：
+ 
+```json
+{
+  "development":{
+    "connector": [
+      {"id": "connector-server-1", "host": "127.0.0.1", "port": 3150, "clientPort":3010, "frontend":true},
+      {"id": "connector-server-2", "host": "127.0.0.1", "port": 3151, "clientPort":3011, "frontend":true}
+    ],
+    "area": [
+      {"id": "area-server-1", "host": "127.0.0.1", "port": 3250, "area": 1},
+      {"id": "area-server-2", "host": "127.0.0.1", "port": 3251, "area": 2},
+      {"id": "area-server-3", "host": "127.0.0.1", "port": 3252, "area": 3}
+    ],
+    "chat":[
+      {"id":"chat-server-1","host":"127.0.0.1","port":3450}
+    ]
+   }
+}
+```
 
 
-### 灵活、轻量的进程管理
+###  客户端请求与响应、广播的抽象介绍
+所有的web应用框架都实现了请求与响应的抽象。尽管游戏应用是基于长连接的， 但请求与响应的抽象跟web应用很类似。
+下图的代码是一个request请求示例：
+ 
+<center>
+![请求示例](http://pomelo.netease.com/resource/documentImage/request.png)
+</center>
 
-### 轻量的应用请求响应和rpc调用 
+请求的api与web应用的ajax请求很象，基于Convention over configuration的原则， 请求不需要任何配置。 如下图所示，请求的route字符串：chat.chatHandler.send， 它可以将请求分发到chat服务器上chatHandler文件定义的send方法。
+ 
+Pomelo的框架里还实现了request的filter机制，广播/组播机制，详细介绍见[pomelo框架参考](https://github.com/NetEase/pomelo/wiki/Pomelo-Framework)。
 
-### 灵活的路由与负载均衡配置
+###  服务器间RPC调用的抽象介绍
+架构中各服务器之间的通讯主要是通过底层RPC框架来完成的，该RPC框架主要解决了进程间消息的路由和RPC底层通讯协议的选择两个问题。
+服务器间的RPC调用也实现了零配置。实例如下图所示：
+ 
+<center>
+![rpc调用](http://pomelo.netease.com/resource/documentImage/rpcInterface.png)
+</center>
+
+上图的remote目录里定义了一个RPC接口： chatRemote.js，它的接口定义如下：
+```
+chatRemote.kick = function(uid, player, cb) {
+}
+```
+其它服务器（RPC客户端）只要通过以下接口就可以实现RPC调用：
+```
+app.rpc.chat.chatRemote.kick(session, uid, player, function(data){
+});
+```
+这个调用会根据特定的路由规则转发到特定的服务器。（如场景服务的请求会根据玩家在哪个场景直接转发到对应的server）。
+RPC框架目前在底层采用socket.io作为通讯协议，但协议对上层是透明的，以后可以替换成任意的协议。
+
 
 
 
 
 ## 五、从游戏框架到实时应用框架
 
-当我们开发完成pomelo框架的时候，我们发现pomelo与游戏服务器没有任何关系。
-
-### 更好的实时应用框架
-
-pomelo游戏框架
+当我们分析完pomelo框架的设计目标时， 我们发现核心框架的这件事情竟然与游戏没有任何关系。这是一个通用的实时分布式应用开发框架。官网上的聊天服务器demo就是一个实时应用。
+事实上pomelo已经被应用在很多非游戏领域的。 网易的消息推送平台是基于pomelo开发的，它承担了网易移动端和web端的消息推送， 已经上线使用。
+事实上pomelo是个更好的实时应用框架。
 
 
-### 支持各类客户端
-
-### 灵活扩展
-
+目前在开源社区最流行的实时应用框架当数meteor，它与pomelo有着截然不同的设计目标。
+以下是meteor给出的定义：
 
 
+首先它的设计目标完全是快速开发，其次它只能与web应用结构。
 
-## 六、未来发展方向
+pomelo相比meteor的优势：
 
-### 分布式开发的模板
+### 强大的可伸缩性和可扩展性
 
-### 
+
+### 支持web、移动、PC、untiy3d等各类客户端
+
+
+## 六、未来与展望
+
+pomelo在开社区才刚刚起步， 仅仅不到半年时间pomelo已经在github和各类社区上积累了强大的人气，1700的watcher在github已经是相当不错的战绩。但这仅仅只是个起步，pomelo的真正的暴发期还未到来。
+
+pomelo将会在分布式开发方面下更大的功夫，在加强高可用、负载均衡、过载保护、运维机制等方面做得更好
+
+pomelo也逐渐在世界的开源社区推广，已经有很多国际node社区的牛人开始关注pomelo。今年十月，pomelo的创始人谢骋超将带着将pomelo成为世界标准的梦想踏上葡萄牙里斯本，在LXJS 2013上做主题演讲。
+
+
+
+
+
+
+
+
+
 
 
